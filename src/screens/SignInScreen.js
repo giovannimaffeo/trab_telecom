@@ -9,7 +9,7 @@ export default function SignInScreen() {
         <View style={styles.container}>
             <Text style={styles.title}>Hidden<Text style={{ color: "#006FFD"}}>Text</Text></Text>
             <Text style={styles.subtitle}>Bem-vindo!</Text>
-            <KeyboardAvoidingView behavior="position" style={styles.inputsContainer} KeyboardAvoidingView>
+            <KeyboardAvoidingView behavior="position" style={styles.inputsContainer}>
                 <TextInput
                     style={styles.input}
                     placeholderTextColor="#B1B1B1"

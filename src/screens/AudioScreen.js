@@ -1,157 +1,147 @@
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View, KeyboardAvoidingView, TouchableOpacity, TouchableWithoutFeedback, Keyboard, SafeAreaView, ScrollView } from "react-native";
-import Icon from "react-native-vector-icons/Feather";
 
 export default function AudioScreen() {
-  const [isPressing, setIsPressing] = useState(false);
-  const [numberOfQuestions, setNumberOfQuestions] = useState(0);
+  const [option, setOption] = useState("code");
 
-  const questions = [
-    {
-        question: "Como faço para tirar 10 na prova de processamento de voz?",
-        response: `Primeiro estude os conceitos fundamentais, como filtragem, espectrogramas e técnicas de processamento. Esteja atento aos detalhes e demonstre compreensão das aplicações práticas. Por fim, participe ativamente das aulas e busque ajuda quando necessário.`
-    },
-    {
-        question: "Entendi, obrigado pelas reomendações!",
-        response: `De nada! Boa sorte nos seus estudos e na prova de processamento de voz. Se precisar de mais ajuda, estou aqui para responder às suas perguntas. Estude com dedicação e confiança!`
-    }
-  ];
-  
-  const getAudioContainerContent = () => {
-    if (numberOfQuestions > 0) {
-        return (
-            <>
-                {questions.slice(0, numberOfQuestions).map((questionObj, index) => 
-                    <View key={index}>
-                            <View style={{...styles.chatElementContainer, backgroundColor: "#7377FF"}}>
-                            <Text style={{ fontWeight: "bold" }}>User</Text>
-                            <Text style={styles.chatBodyText}>{questionObj.question}</Text>
-                        </View>
-                        <View style={{...styles.chatElementContainer, backgroundColor: "#7D4CBC"}}>
-                            <Text style={{ fontWeight: "bold" }}>Chat GPT</Text>
-                            <Text style={styles.chatBodyText}>{questionObj.response}</Text>
-                        </View>
-                    </View>
-                )}
-            </>
-        );
-    } else {
-        return (
-            <Text style={styles.audioText}>
-            Esse aplicativo foi projetado para tornar sua interação com o ChatGPT mais <Text style={{ color: "#7377FF", fontWeight: "bold" }}>fácil e conveniente</Text>!{"\n\n"}
-            Agora você pode obter respostas instantâneas para o ChatGPT simplesmente <Text style={{ color: "#7377FF", fontWeight: "bold" }}>gravando suas perguntas</Text> ao invés de digitá-las{"\n\n"}
-            <Text style={{ color: "#7377FF", fontWeight: "bold" }}>Pronto para experimentar?</Text>{"\n"}
-            Pressione o botão de gravação e comece a conversar com o ChatGPT por áudio agora mesmo!
-            </Text>
-        );
-    };
+  const isActive = (optionType) => {
+    return optionType === option ? "#006FFD" : "#fff"; 
   };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity style={styles.headerOptionContainer}>
-                    <Icon name="plus" size={40} color="#fff" />
-                    <Text style={styles.headerOptionText}>New Chat</Text>
+        <KeyboardAvoidingView behavior="position" style={styles.container}>
+            <Text style={styles.title}>Hidden<Text style={{ color: "#006FFD"}}>Text</Text></Text>
+            <View style={styles.optionsContainer}>
+                <Text style={styles.subtitle}>Escolha a opção desejada:</Text>
+                <TouchableOpacity style={{...styles.option, marginTop: 30 }} onPress={() => setOption("code")}>
+                <View style={{...styles.optionIcon, backgroundColor: isActive("code") }} />
+                    <Text style={styles.optionText}>
+                        Codificar um texto
+                    </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.headerOptionContainer}>
-                    <Icon name="clock" size={40} color="#fff" />
-                    <Text style={styles.headerOptionText}>History</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.headerOptionContainer}>
-                    <Icon name="settings" size={40} color="#fff" />
-                    <Text style={styles.headerOptionText}>Settings</Text>
+                <TouchableOpacity style={{ ...styles.option, marginTop: 10 }} onPress={() => setOption("decode")}>
+                    <View style={{...styles.optionIcon, backgroundColor: isActive("decode") }} />
+                    <Text style={styles.optionText}>
+                        Decodificar um áudio
+                    </Text>
                 </TouchableOpacity>
             </View>
-            <ScrollView style={{flex: 1}}>
-                <View style={styles.audioContainer}>
-                    {getAudioContainerContent()}
-                </View>
-            </ScrollView>
-            <TouchableOpacity style={{...styles.audioButton}} onPressIn={() => setIsPressing(true)} onPressOut={() => (setIsPressing(false), numberOfQuestions < 2 && setNumberOfQuestions(numberOfQuestions + 1))}>
-                <Icon name="mic" size={40} color="#585966" />
-            </TouchableOpacity>
-        </SafeAreaView>
+            <View>
+                {
+                    option === "code"
+                    ?
+                    <View>
+                    <Text style={{ ...styles.subtitle, marginTop: 30 }}>Insira o texto desejado:</Text> 
+                    <TextInput
+                            style={styles.input}
+                            placeholderTextColor="#B1B1B1"
+                            textAlignVertical="top"
+                            placeholder="Segredos..."
+                            multiline={true}
+                        />
+                        <TouchableOpacity style={styles.loginButton} onPress={() => null}>
+                            <Text style={styles.loginButtonText}>Criptografar para áudio</Text>
+                        </TouchableOpacity>
+                    </View>
+                    :
+                    <View>
+                        <Text style={{ ...styles.subtitle, marginTop: 30 }}>Insira o arquivo desejado:</Text> 
+                        <TouchableOpacity style={styles.loginButton} onPress={() => null}>
+                            <Text style={styles.loginButtonText}>Adicionar arquivo de áudio</Text>
+                        </TouchableOpacity>
+                        <TextInput
+                            style={styles.input}
+                            placeholderTextColor="#B1B1B1"
+                            textAlignVertical="top"
+                            placeholder="O texto criptografo aparecerá aqui..."
+                            multiline={true}
+                        />
+                    </View>
+                }
+            </View>
+        </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+container: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center"
+    },
+  title: {
+    color: "#000",
+    fontSize: 54,
+    marginTop: 110,
+    fontWeight: "bold"
   },
-  header: {
-    backgroundColor: "#7377FF",
-    height: 100,
-    width: 365,
-    marginTop: 25,
+  optionsContainer: {
+    marginTop: 40
+  },
+  subtitle: {
+    color: "#000",
+    fontSize: 17,
+    fontWeight: "bold"
+  },
+  option: {
+    width: 330,
+    height: 50,
     borderRadius: 16,
-    paddingHorizontal: 30,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  headerOptionContainer: {
-    width: 67,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  headerOptionText: {
+    paddingHorizontal: 16, 
     color: "#fff",
-    fontSize: 14,
-    fontWeight: "bold",
-    marginTop: 5
-  },
-  audioContainer: {
-    backgroundColor: "#D5D7FF",
-    marginTop: 23,
-    borderRadius: 14,
-    height: 520,
-    width: 365,
-    display: "flex",
-    alignItems: "center"
-  },
-  audioButton: {
-    backgroundColor: "#7377FF",
+    borderWidth: 1.5,           
+    borderColor: '#DFDFE2',    
+    borderStyle: 'solid',
+    color: "#B1B1B1",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 40,
-    padding: 20,
-    marginTop: 15
+    flexDirection: "row"
   },
-  audioText: {
+  optionIcon: {
+    width: 20, 
+    height: 20, 
+    borderRadius: 10,
+    borderWidth: 1,           
+    borderColor: '#DFDFE2',    
+    borderStyle: 'solid',
+    color: "#B1B1B1",
+  },
+  optionText: {
     color: "#585966",
-    textAlign: "center", 
-    width: "85%",
-    marginTop: 35,
-    fontSize: 15
+    fontSize: 13,
+    fontWeight: "400",
+    marginLeft: 10
   },
-  recordingText: {
-    color: "#333333",
-    fontSize: 25,
+  loginButton: {
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "#006FFD",
+    width: 330,
+    height: 49,
+    borderRadius: 11,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 25
+  },
+  loginButtonText: {
+    fontSize: 13,
+    color: "#fff",
     fontWeight: "bold",
-    marginBottom: -28
+    textAlignVertical: "top"
   },
-  chatElementContainer: {
-    backgroundColor: "#7377FF", 
-    width: "95%", 
-    height: "auto", 
-    paddingHorizontal: 8, 
-    paddingBottom: 15, 
-    paddingTop: 10, 
-    borderRadius: 14, 
+  input: {
+    width: 330,
+    height: 280,
+    borderRadius: 16,
+    paddingHorizontal: 16, 
+    color: "#fff",
+    borderWidth: 1.5,           
+    borderColor: '#DFDFE2',    
+    borderStyle: 'solid',
+    color: "#B1B1B1",
     marginTop: 15
-  },
-  chatBodyText: {
-    fontSize: 13, 
-    color: "#fff", 
-    marginTop: 5, 
-    lineHeight: 20
   }
 });
